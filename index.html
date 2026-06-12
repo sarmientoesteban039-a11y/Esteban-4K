@@ -3,32 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <meta name="description" content="Recargas de diamantes para Free Fire al mejor precio. Esteban 4K es tu tienda premium de confianza.">
     <meta name="keywords" content="recargas diamantes, Free Fire, tienda diamantes, Esteban 4K, recargas seguras">
-    <meta property="og:title" content="Esteban 4K | Premium Shop">
-    <meta property="og:description" content="La mejor tienda premium de recargas para Free Fire. Rápido, seguro y confiable.">
-    
-    <title>Esteban 4K | Premium Shop - Recargas de Diamantes</title>
+    <title>Esteban 4K | Premium Shop</title>
     
     <style>
         :root { --bg-dark: #0a0a0a; --card-dark: rgba(20, 20, 20, 0.85); --neon-cyan: #00f2ff; --neon-magenta: #ff00ff; --accent-red: #ff3e3e; --text-white: #e0e0e0; }
-        body { 
-            margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-white);
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070');
-            background-size: cover; background-position: center; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-        }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: var(--bg-dark); color: var(--text-white); background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070'); background-size: cover; background-position: center; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         header { width: 100%; background: rgba(0,0,0,0.9); padding: 20px 0; text-align: center; border-bottom: 2px solid var(--neon-magenta); }
         .container { width: 90%; max-width: 600px; margin: 20px auto; padding: 10px; }
-        .card { background: var(--card-dark); padding: 20px; border-radius: 15px; border: 1px solid #333; backdrop-filter: blur(10px); margin-bottom: 20px; }
-        
+        .card { background: var(--card-dark); padding: 20px; border-radius: 15px; border: 1px solid #333; backdrop-filter: blur(10px); margin-bottom: 20px; box-shadow: 0 0 10px rgba(0, 242, 255, 0.1); }
         #seccionRecarga, #seccionPago, #seccionFinal { display: none; }
-        
         .grid-gems { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-top: 20px; }
         .gem-box { background: #1a1a1a; padding: 15px; text-align: center; border: 1px solid #444; border-radius: 10px; cursor: pointer; transition: 0.3s; }
         .gem-box:hover { border-color: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); }
-        
         .btn-action { background: linear-gradient(90deg, var(--neon-magenta), var(--accent-red)); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
         .btn-back { background: transparent; color: var(--neon-cyan); border: 1px solid var(--neon-cyan); padding: 5px 15px; border-radius: 4px; cursor: pointer; margin-bottom: 15px; }
         input, select { background: #222; border: 1px solid #444; color: white; padding: 15px; width: 100%; border-radius: 8px; margin: 10px 0; box-sizing: border-box; }
@@ -44,8 +32,7 @@
             projectId: "esteban-4k",
             storageBucket: "esteban-4k.firebasestorage.app",
             messagingSenderId: "319790003304",
-            appId: "1:319790003304:web:b84b2458213686b3e0b7dd",
-            measurementId: "G-JE3GMNGY90"
+            appId: "1:319790003304:web:b84b2458213686b3e0b7dd"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -53,14 +40,11 @@
 
         window.iniciarSesion = async () => {
             const id = document.getElementById('idInput').value;
-            const esValido = /^\d{5,12}$/.test(id);
-            if (esValido) {
+            if (/^\d{5,12}$/.test(id)) {
                 await addDoc(collection(db, "jugadores"), { id: id, fecha: new Date(), estado: "iniciado" });
                 document.getElementById('seccionLogin').style.display = 'none';
                 document.getElementById('seccionRecarga').style.display = 'block';
-            } else {
-                alert("❌ Error: ID de jugador inválido. Solo números (5-12 dígitos).");
-            }
+            } else { alert("ID inválido (5-12 dígitos)."); }
         };
 
         window.seleccionarPack = (precio) => {
@@ -72,11 +56,8 @@
         window.finalizar = () => {
             const id = document.getElementById('idInput').value;
             const paquete = document.getElementById('precioTotal').innerText;
-            const numeroWhatsApp = "584126701585";
-            
-            const mensaje = `Hola Esteban, tengo una nueva compra:%0A- ID: ${id}%0A- Pack: ${paquete}`;
-            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
-            
+            const mensaje = `Hola Esteban, acabo de realizar un pago.%0A- ID: ${id}%0A- Pack: ${paquete}%0A- Adjunto comprobante:`;
+            window.open(`https://wa.me/584126701585?text=${mensaje}`, '_blank');
             document.getElementById('seccionPago').style.display = 'none';
             document.getElementById('seccionFinal').style.display = 'block';
         };
@@ -115,18 +96,19 @@
         <button class="btn-back" onclick="volver('pago')">← Volver</button>
         <h3>3. Método de Pago</h3>
         <div style="text-align: center; margin: 15px 0;">
-            <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x65.jpg" alt="PayPal" style="width: 80px; border-radius: 8px;">
+            <p>Envía tu pago a esta cuenta de PayPal:</p>
+            <div style="background: #000; padding: 10px; border: 1px solid var(--neon-magenta); border-radius: 8px; margin: 10px 0;">
+                <code style="color: var(--neon-cyan);">sarmientoesteban039@gmail.com</code>
+            </div>
+            <p style="font-size: 0.8em; opacity: 0.7;">* Después de pagar, confirma con el botón abajo.</p>
         </div>
         <h2 id="precioTotal" style="color: var(--neon-cyan); text-align: center;"></h2>
-        <select>
-            <option>PayPal</option>
-        </select>
-        <button class="btn-action" onclick="finalizar()">Confirmar Pago</button>
+        <button class="btn-action" onclick="finalizar()">Confirmar y Avisar por WhatsApp</button>
     </div>
 
     <div id="seccionFinal" class="card" style="text-align: center;">
         <h2 style="color: var(--neon-cyan);">¡Compra Exitosa!</h2>
-        <p>Tu recarga está siendo procesada. Gracias por confiar en Esteban 4K.</p>
+        <p>Tu recarga está siendo procesada.</p>
         <button class="btn-action" onclick="location.reload()">Regresar al inicio</button>
     </div>
 </div>
