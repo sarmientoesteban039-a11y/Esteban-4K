@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TiendaDiamantesEsteban</title>
+    <title>Esteban 4K | iOS Light Pro</title>
     <style>
         :root { 
-            --bg-color: #F2F2F7;
-            --glass-bg: rgba(255, 255, 255, 0.75); /* Un poco más transparente para ver las partículas detrás */
+            --glass-bg: rgba(255, 255, 255, 0.70);
             --ios-blue: #007AFF;
             --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
             --text-main: #000000;
-            --text-secondary: #8E8E93;
+            --text-secondary: #636366;
         }
         
         * {
@@ -22,147 +22,124 @@
         body { 
             margin: 0; 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif; 
-            background-color: var(--bg-color); 
+            background-color: #F2F2F7; /* Gris claro de fondo base de Apple */
             color: var(--text-main);
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
             padding: 20px;
-            overflow: hidden; /* Evita barras de desplazamiento por culpa de las partículas */
+            overflow: hidden;
             position: relative;
         }
 
-        /* CONTENEDOR DE PARTÍCULAS */
+        /* 🎮 MARCA DE AGUA DE GARENA FREE FIRE ULTRA CLARITO 🎮 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3SUD9dVw0iDXRZVOUQhhFckM29RzOD7AEUw&s'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.25; /* Al 4% de opacidad para que se lea todo perfecto */
+            filter: blur(3px); /* Suaviza el fondo gaming */
+            z-index: -1;
+            pointer-events: none;
+        }
+
         #particles-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none; /* Permite hacer clic a través de ellas */
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none;
         }
 
         .particle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.5;
-            filter: blur(1px); /* Suaviza los bordes para estilo iOS */
-            animation: floatUp linear infinite;
+            position: absolute; border-radius: 50%; opacity: 0.4;
+            filter: blur(1px); animation: floatUp linear infinite;
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(105vh) translateX(0) scale(0.5);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-10vh) translateX(50px) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(105vh) translateX(0) scale(0.5); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) translateX(50px) scale(1.2); opacity: 0; }
         }
 
         .container { 
-            width: 100%; 
-            max-width: 400px; 
-            position: relative;
-            z-index: 1; /* Posiciona la app por encima de las partículas */
+            width: 100%; max-width: 400px; position: relative; z-index: 1;
         }
 
         .card { 
             background: var(--glass-bg); 
-            backdrop-filter: blur(25px); /* Aumentado para un look premium sobre las partículas */
-            -webkit-backdrop-filter: blur(25px); 
-            padding: 25px; 
-            border-radius: 30px; 
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-            display: none;
+            backdrop-filter: blur(35px); 
+            -webkit-backdrop-filter: blur(35px); 
+            padding: 25px; border-radius: 30px; 
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            position: relative; display: none;
         }
         
         .card.active {
-            display: block;
-            animation: iosSlide 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: block; animation: iosSlide 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        h3 {
-            margin-top: 0;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+        .card.verificando {
+            border: 3px solid transparent;
+            background-image: linear-gradient(var(--glass-bg), var(--glass-bg)), 
+                              linear-gradient(135deg, #007AFF, #FF69B4, #00BFFF, #FF1493, #007AFF);
+            background-origin: border-box; background-clip: padding-box, border-box;
+            background-size: 400% 400%; animation: borderGlowIA 3s linear infinite;
         }
+
+        @keyframes borderGlowIA {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h3 { margin-top: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
         
         .ios-button-style { 
-            background: rgba(0, 0, 0, 0.05); 
-            border: none;
-            padding: 16px; 
-            width: 100%; 
-            border-radius: 16px; 
-            color: var(--ios-blue); 
-            font-weight: 600; 
-            font-size: 17px;
-            cursor: pointer;
-            margin-top: 12px;
-            text-align: center;
+            background: var(--ios-blue); border: none; padding: 16px; width: 100%; 
+            border-radius: 16px; color: white; font-weight: 600; font-size: 17px; 
+            cursor: pointer; margin-top: 12px; text-align: center;
         }
         
-        .ios-button-style:active { 
-            transform: scale(0.96); 
-            opacity: 0.8; 
-        }
-        
-        .ios-button-style.primary { 
-            background: var(--ios-blue); 
-            color: white; 
-        }
-
-        .ios-button-style.danger { 
-            color: var(--ios-red); 
-        }
+        .ios-button-style:active { transform: scale(0.96); opacity: 0.8; }
+        .ios-button-style.danger { background: rgba(0, 0, 0, 0.05); color: var(--ios-red); }
+        .ios-button-style:disabled { background: #D1D1D6; color: #8E8E93; cursor: not-allowed; }
 
         input { 
-            background: rgba(0,0,0,0.04); 
-            border: 2px solid transparent;
-            padding: 16px; 
-            width: 100%; 
-            border-radius: 16px; 
-            color: var(--text-main); 
-            font-size: 16px;
-            margin-bottom: 8px;
-            outline: none;
+            background: rgba(0,0,0,0.04); border: 2px solid transparent; padding: 16px; width: 100%; 
+            border-radius: 16px; color: var(--text-main); font-size: 16px; margin-bottom: 8px; outline: none;
         }
+        input:focus { border-color: var(--ios-blue); background: #ffffff; }
+        input:disabled { background: rgba(0,0,0,0.02); color: #8E8E93; }
 
-        input:focus {
-            border-color: var(--ios-blue);
-            background: #ffffff;
-        }
-        
         .gem-option { 
-            background: rgba(0,0,0,0.04); 
-            padding: 18px; 
-            border-radius: 16px; 
-            margin-bottom: 12px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
+            background: rgba(0,0,0,0.04); padding: 18px; border-radius: 16px; margin-bottom: 12px; 
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600;
+        }
+        .gem-option:active { transform: scale(0.98); background: rgba(0,0,0,0.08); }
+        .gem-option span { color: var(--text-secondary); }
+
+        .ticket-box {
+            background: #ffffff; border-radius: 20px; padding: 20px; margin-top: 15px;
+            border: 1px dashed #D1D1D6; box-shadow: 0 4px 15px rgba(0,0,0,0.01); width: 100%;
         }
 
-        .gem-option:active {
-            transform: scale(0.98);
-            background: rgba(0,0,0,0.08);
+        .ticket-row {
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 12px; font-size: 14px; width: 100%;
         }
+        .ticket-row:last-child { margin-bottom: 0; }
+        .ticket-label { color: var(--text-secondary); font-weight: 500; text-align: left; }
+        .ticket-value { color: var(--text-main); font-weight: 600; text-align: right; }
 
-        .gem-option span {
-            color: var(--text-secondary);
+        .status-badge {
+            background: rgba(255, 149, 0, 0.15); color: var(--ios-orange); padding: 10px 12px;
+            border-radius: 20px; font-size: 13px; font-weight: 700; display: block;
+            text-align: center; width: 100%; margin-bottom: 15px; letter-spacing: 0.5px;
         }
 
         @keyframes iosSlide {
@@ -170,21 +147,23 @@
             to { transform: translateY(0); opacity: 1; }
         }
     </style>
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
 </head>
+
 <body>
 
-<!-- DIV PARA EL FONDO ANIMADO -->
 <div id="particles-container"></div>
 
 <div class="container">
-    <!-- SECCIÓN LOGIN -->
+    <!-- PANTALLA 1: IDENTIFICACIÓN -->
     <div id="seccionLogin" class="card active">
         <h3>Identificación</h3>
         <input type="text" id="idInput" placeholder="ID de Jugador" inputmode="numeric">
-        <button class="ios-button-style primary" id="btnLogin">Verificar Identidad</button>
+        <button class="ios-button-style" id="btnLogin">Verificar Identidad</button>
     </div>
 
-    <!-- SECCIÓN RECARGA -->
+    <!-- PANTALLA 2: SELECCIÓN DE PACK -->
     <div id="seccionRecarga" class="card">
         <h3>Selecciona Pack</h3>
         <div class="gem-option" data-precio="$0.99">💎 100 <span>$0.99</span></div>
@@ -192,19 +171,79 @@
         <button class="ios-button-style danger" id="btnAtrasRecarga">Atrás</button>
     </div>
 
-    <!-- SECCIÓN PAGO -->
+    <!-- PANTALLA 3: MÉTODOS DE PAGO -->
+    <div id="seccionMetodoPago" class="card">
+        <h3>Método de Pago</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 15px;">Selecciona una opción y realiza el pago:</p>
+        
+        <div class="gem-option" data-metodo="Pago Móvil" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
+                <span>📱 Pago Móvil</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; line-height: 1.4; width: 100%;">
+                Banco: Banesco (0134)<br>
+                Teléfono: 0412-6701585<br>
+                Cédula: V-12.345.678<br>
+                <b id="montoPagoMovil" style="color: var(--ios-blue); display: block; margin-top: 5px;">Monto: Calculando...</b>
+            </div>
+        </div>
+        
+        <div class="gem-option" data-metodo="Binance Pay" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
+                <span>🔶 Binance Pay</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; width: 100%;">
+                Binance ID: 319790003
+            </div>
+        </div>
+        
+        <div class="gem-option" data-metodo="PayPal" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
+                <span>💳 PayPal</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; width: 100%;">
+                Correo: esteban4k@email.com
+            </div>
+        </div>
+        
+        <button class="ios-button-style danger" id="btnAtrasMetodo">Atrás</button>
+    </div>
+
+    <!-- PANTALLA 4: REGISTRO DE REFERENCIA -->
     <div id="seccionPago" class="card">
         <h3>Pago Seguro</h3>
         <input type="text" id="refPago" placeholder="N° Referencia" inputmode="numeric">
         <h2 id="precioTotal" style="text-align:center; margin: 20px 0;"></h2>
-        <button class="ios-button-style primary" id="btnFinalizar">Confirmar Pago</button>
-        <button class="ios-button-style danger" id="btnCancelar">Cancelar</button>
+        <button class="ios-button-style" id="btnFinalizar">Confirmar Pago</button>
+        <button class="ios-button-style danger" id="btnCancelarPago">Cancelar</button>
+    </div>
+
+    <!-- PANTALLA 5: TICKET DIGITAL DE COMPROBACIÓN -->
+    <div id="seccionTicket" class="card">
+        <h3 style="text-align: center; margin-bottom: 5px;">Comprobante de Orden</h3>
+        <p style="text-align: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">Guarda una captura de este recibo</p>
+        
+        <div class="status-badge"><span>🟡 PENDIENTE POR VALIDAR</span></div>
+
+        <div class="ticket-box">
+            <div class="ticket-row"><span class="ticket-label">Nick Jugador:</span><span class="ticket-value" id="t-nombre" style="color: #4CD964; font-weight: 700;">--</span></div>
+            <div class="ticket-row"><span class="ticket-label">ID Jugador:</span><span class="ticket-value" id="t-id">--</span></div>
+            <div class="ticket-row"><span class="ticket-label">Producto:</span><span class="ticket-value" id="t-pack">--</span></div>
+            <div class="ticket-row"><span class="ticket-label">Método:</span><span class="ticket-value" id="t-metodo">--</span></div>
+            <div class="ticket-row"><span class="ticket-label">Monto Total:</span><span class="ticket-value" id="t-monto">--</span></div>
+            <div class="ticket-row" style="border-top: 1px dashed #E5E5EA; padding-top: 10px; margin-top: 5px; margin-bottom: 0;">
+                <span class="ticket-label">N° Referencia:</span><span class="ticket-value" id="t-ref" style="color: var(--ios-blue);">--</span>
+            </div>
+        </div>
+
+        <button class="ios-button-style" id="btnEnviarWhatsApp">Notificar a Esteban 4K</button>
+        <button class="ios-button-style danger" id="btnNuevaOrden">Hacer otra recarga</button>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://gstatic.com";
-    import { getFirestore, collection, addDoc } from "https://gstatic.com";
+<script>
+    // Configuración manual de tu tasa cambiaria del día
+    const tasaDolarHoy = 790; 
 
     const firebaseConfig = {
         apiKey: "AIzaSyCWLQaTQXt6DFHHf1S_-shcNdIaLpwXeoo",
@@ -215,103 +254,160 @@
         appId: "1:319790003304:web:b84b2458213686b3e0b7dd"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // --- GENERADOR DE PARTÍCULAS DINÁMICAS ---
-    const crearParticulas = () => {
-        const container = document.getElementById('particles-container');
-        const cantidadParticulas = 25; // Cantidad balanceada para rendimiento móvil
-        const colores = ['#FF69B4', '#00BFFF', '#FF1493', '#1E90FF']; // Variaciones de rosa y azul
-
-        for (let i = 0; i < cantidadParticulas; i++) {
-            const particula = document.createElement('div');
-            particula.classList.add('particle');
-            
-            // Tamaños aleatorios entre 6px y 18px
-            const tamano = Math.random() * 12 + 6;
-            particula.style.width = `${tamano}px`;
-            particula.style.height = `${tamano}px`;
-            
-            // Color e inicio aleatorio horizontal
-            particula.style.background = colores[Math.floor(Math.random() * colores.length)];
-            particula.style.left = `${Math.random() * 100}vw`;
-            
-            // Tiempos de animación desfasados para que salgan continuamente
-            particula.style.animationDuration = `${Math.random() * 8 + 6}s`;
-            particula.style.animationDelay = `${Math.random() * -10}s`;
-
-            container.appendChild(particula);
+    let db = null;
+    try {
+        if (typeof firebase !== 'undefined') {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
         }
-    };
-    
-    // Inicializar partículas al cargar la página
-    crearParticulas();
+    } catch (e) { }
 
-    // --- LÓGICA DE LA APLICACIÓN ---
+    // Memorias globales del flujo
+    let jugadorId = "";
+    let jugadorNombre = "";
+    let precioSeleccionado = "";
+    let metodoSeleccionado = "";
+    let referenciaIngresada = "";
+
     const cambiarPantalla = (pantallaOcultar, pantallaMostrar) => {
         document.getElementById(pantallaOcultar).classList.remove('active');
         document.getElementById(pantallaMostrar).classList.add('active');
     };
 
-    document.getElementById('btnLogin').addEventListener('click', async () => {
+    // Paso 1: Verificación de Identidad con Efecto IA (5 Segundos)
+    document.getElementById('btnLogin').addEventListener('click', function() {
         const idInput = document.getElementById('idInput');
-        const id = idInput.value.trim();
+        const btnLogin = document.getElementById('btnLogin');
+        const cardLogin = document.getElementById('seccionLogin');
+        jugadorId = idInput.value.trim();
 
-        if (/^\d{5,12}$/.test(id)) {
-            try {
-                await addDoc(collection(db, "jugadores"), { id: id, fecha: new Date() });
-                cambiarPantalla('seccionLogin', 'seccionRecarga');
-            } catch (error) {
-                alert("Error de conexión. Inténtalo de nuevo.");
-            }
-        } else { 
-            alert("ID Inválido. Debe tener entre 5 y 12 números."); 
+        if (!/^\d{5,12}$/.test(jugadorId)) {
+            return alert("ID Inválido. Debe tener entre 5 y 12 números.");
         }
+
+        cardLogin.classList.add('verificando');
+        btnLogin.innerText = "Verificando identidad con IA...";
+        btnLogin.disabled = true; idInput.disabled = true;
+
+        if (db) { db.collection("jugadores").add({ id: jugadorId, fecha: new Date() }).catch(function() { }); }
+
+        setTimeout(function() {
+            cardLogin.classList.remove('verificando'); btnLogin.innerText = "Verificar Identidad";
+            btnLogin.disabled = false; idInput.disabled = false;
+            cambiarPantalla('seccionLogin', 'seccionRecarga');
+        }, 5000);
     });
 
-    document.querySelectorAll('.gem-option').forEach(element => {
-        element.addEventListener('click', () => {
-            const precio = element.getAttribute('data-precio');
-            document.getElementById('precioTotal').innerText = "Total: " + precio;
-            cambiarPantalla('seccionRecarga', 'seccionPago');
+    // Paso 2: Selección de Pack + Conversor matemático
+    document.querySelectorAll('#seccionRecarga .gem-option').forEach(function(element) {
+        element.addEventListener('click', function() {
+            precioSeleccionado = element.getAttribute('data-precio');
+            const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
+            const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
+            
+            document.getElementById('montoPagoMovil').innerText = "Monto exacto a transferir: " + totalEnBolivares + " Bs.";
+            cambiarPantalla('seccionRecarga', 'seccionMetodoPago');
         });
     });
 
-    document.getElementById('btnFinalizar').addEventListener('click', () => {
-        const ref = document.getElementById('refPago').value.trim();
-        if (ref.length < 5) {
-            return alert("Por favor, ingresa una referencia válida (mínimo 5 caracteres).");
-        }
-        const mensajeWhatsApp = encodeURIComponent(`Hola, realicé un pago. Ref: ${ref}`);
-        window.open(`https://wa.me{mensajeWhatsApp}`, '_blank');
+    // Paso 3: Selección de método de pago y formato de totales
+    document.querySelectorAll('#seccionMetodoPago .gem-option').forEach(function(element) {
+        element.addEventListener('click', function() {
+            metodoSeleccionado = element.getAttribute('data-metodo');
+            const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
+            const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
+            
+            if (metodoSeleccionado === "Pago Móvil") {
+                document.getElementById('precioTotal').innerText = "Total: " + totalEnBolivares + " Bs. (" + metodoSeleccionado + ")";
+            } else {
+                document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado + " (" + metodoSeleccionado + ")";
+            }
+            cambiarPantalla('seccionMetodoPago', 'seccionPago');
+        });
     });
-    
 
-    document.getElementById('btnAtrasRecarga').addEventListener('click', () => cambiarPantalla('seccionRecarga', 'seccionLogin'));
-
-    <!-- SCRIPT TRADICIONAL PARA LAS PARTÍCULAS -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const container = document.getElementById('particles-container');
-        const cantidadParticulas = 30; 
-        const colores = ['#FF69B4', '#00BFFF', '#FF1493', '#1E90FF']; 
-
-        for (let i = 0; i < cantidadParticulas; i++) {
-            const particula = document.createElement('div');
-            particula.classList.add('particle');
-            
-            const tamano = Math.random() * 14 + 6;
-            particula.style.width = `${tamano}px`;
-            particula.style.height = `${tamano}px`;
-            
-            particula.style.background = colores[Math.floor(Math.random() * colores.length)];
-            particula.style.left = `${Math.random() * 100}vw`;
-            
-            particula.style.animationDuration = `${Math.random() * 8 + 6}s`;
-            particula.style.animationDelay = `${Math.random() * -10}s`;
-
-            container.appendChild(particula);
+    // Paso 4: Confirmar pago (Algoritmo IA genera el Nick e inyecta al comprobante)
+    document.getElementById('btnFinalizar').addEventListener('click', function() {
+        referenciaIngresada = document.getElementById('refPago').value.trim();
+        
+        if (referenciaIngresada.length < 5) { 
+            return alert("Por favor, ingresa una referencia válida (mínimo 5 caracteres)."); 
         }
+
+        const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
+        const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
+        const montoFinalTexto = (metodoSeleccionado === "Pago Móvil") ? totalEnBolivares + " Bs." : precioSeleccionado;
+
+        // Algoritmo: Genera un Nick único a partir de los números reales de su ID
+        const listaNombres = ["Slayer", "Alfa", "Ghost", "Ninja", "Titan", "Raptor", "Zeus", "Shadow", "Gamer"];
+        const ultimos4 = jugadorId.slice(-4); 
+        const indice = parseInt(jugadorId) % listaNombres.length;
+        jugadorNombre = listaNombres[indice] + "_" + ultimos4;
+
+        if (db) {
+            db.collection("pagos_recargas").add({
+                jugadorId: jugadorId,
+                jugadorNombre: jugadorNombre,
+                pack: precioSeleccionado,
+                metodo: metodoSeleccionado,
+                monto: montoFinalTexto,
+                referencia: referenciaIngresada,
+                estatus: "Pendiente",
+                fecha: new Date()
+            }).catch(function() { });
+        }
+
+        // Inyectar datos en las etiquetas del ticket
+        document.getElementById('t-nombre').innerText = "⚔️ " + jugadorNombre;
+        document.getElementById('t-id').innerText = jugadorId;
+        document.getElementById('t-pack').innerText = (precioSeleccionado === "$0.99") ? "💎 100 Diamantes" : "💎 310 Diamantes";
+        document.getElementById('t-metodo').innerText = metodoSeleccionado;
+        document.getElementById('t-monto').innerText = montoFinalTexto;
+        document.getElementById('t-ref').innerText = referenciaIngresada;
+
+        cambiarPantalla('seccionPago', 'seccionTicket');
     });
+
+    // Enviar datos formateados directo a tu WhatsApp
+    document.getElementById('btnEnviarWhatsApp').addEventListener('click', function() {
+        const montoFinalTexto = document.getElementById('t-monto').innerText;
+        const packNombre = document.getElementById('t-pack').innerText;
+        
+        const mensajeWhatsApp = encodeURIComponent(
+            "💎 NUEVA SOLICITUD DE RECARGA 💎\n\n" +
+            "👤 Nick Jugador: " + jugadorNombre + "\n" +
+            "🆔 ID Jugador: " + jugadorId + "\n" +
+            "📦 Paquete: " + packNombre + "\n" +
+            "📱 Método: " + metodoSeleccionado + "\n" +
+            "💰 Monto: " + montoFinalTexto + "\n" +
+            "🔢 Ref: " + referenciaIngresada + "\n\n" +
+            "Estatus: 🟡 Esperando validación por Esteban 4K."
+        );
+        window.open("https://wa.me" + mensajeWhatsApp, '_blank');
+    });
+
+    document.getElementById('btnNuevaOrden').addEventListener('click', function() { location.reload(); });
+
+    document.getElementById('btnAtrasRecarga').addEventListener('click', function() { cambiarPantalla('seccionRecarga', 'seccionLogin'); });
+    document.getElementById('btnAtrasMetodo').addEventListener('click', function() { cambiarPantalla('seccionMetodoPago', 'seccionRecarga'); });
+    document.getElementById('btnCancelarPago').addEventListener('click', function() { cambiarPantalla('seccionPago', 'seccionMetodoPago'); });
+
+    // Animación de partículas rosas y azules de fondo
+    const containerParticulas = document.getElementById('particles-container');
+    const cantidadParticulas = 35; 
+    const coloresParticulas = ['#FF69B4', '#00BFFF', '#FF1493', '#1E90FF']; 
+
+    for (let i = 0; i < cantidadParticulas; i++) {
+        const particula = document.createElement('div');
+        particula.classList.add('particle');
+        const tamano = Math.random() * 12 + 6;
+        particula.style.width = tamano + 'px'; particula.style.height = tamano + 'px';
+        particula.style.background = coloresParticulas[Math.floor(Math.random() * coloresParticulas.length)];
+        particula.style.left = (Math.random() * 100) + 'vw';
+        particula.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        particula.style.animationDelay = (Math.random() * -10) + 's';
+        containerParticulas.appendChild(particula);
+    }
 </script>
+</body>
+</html>
