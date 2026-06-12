@@ -7,7 +7,7 @@
     <style>
         :root { 
             --bg-color: #F2F2F7;
-            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.75); /* Un poco más transparente para ver las partículas detrás */
             --ios-blue: #007AFF;
             --ios-red: #FF3B30;
             --text-main: #000000;
@@ -29,22 +29,62 @@
             align-items: center; 
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden; /* Evita barras de desplazamiento por culpa de las partículas */
+            position: relative;
+        }
+
+        /* CONTENEDOR DE PARTÍCULAS */
+        #particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none; /* Permite hacer clic a través de ellas */
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+            filter: blur(1px); /* Suaviza los bordes para estilo iOS */
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) translateX(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(50px) scale(1.2);
+                opacity: 0;
+            }
         }
 
         .container { 
             width: 100%; 
             max-width: 400px; 
+            position: relative;
+            z-index: 1; /* Posiciona la app por encima de las partículas */
         }
 
         .card { 
             background: var(--glass-bg); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px); 
+            backdrop-filter: blur(25px); /* Aumentado para un look premium sobre las partículas */
+            -webkit-backdrop-filter: blur(25px); 
             padding: 25px; 
             border-radius: 30px; 
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.03);
-            display: none; /* Ocultos por defecto, manejados por JS */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            display: none;
         }
         
         .card.active {
@@ -125,7 +165,6 @@
             color: var(--text-secondary);
         }
 
-        /* Animación suave estilo iOS */
         @keyframes iosSlide {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -133,6 +172,9 @@
     </style>
 </head>
 <body>
+
+<!-- DIV PARA EL FONDO ANIMADO -->
+<div id="particles-container"></div>
 
 <div class="container">
     <!-- SECCIÓN LOGIN -->
@@ -161,14 +203,12 @@
 </div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+    import { initializeApp } from "https://gstatic.com";
+    import { getFirestore, collection, addDoc } from "https://gstatic.com";
 
-    // NOTA: Tus credenciales de Firebase están expuestas en el cliente. 
-    // Asegúrate de configurar las Reglas de Seguridad en tu consola de Firebase.
     const firebaseConfig = {
         apiKey: "AIzaSyCWLQaTQXt6DFHHf1S_-shcNdIaLpwXeoo",
-        authDomain: "esteban-4k.firebaseapp.com",
+        authDomain: "://firebaseapp.com",
         projectId: "esteban-4k",
         storageBucket: "esteban-4k.firebasestorage.app",
         messagingSenderId: "319790003304",
@@ -178,32 +218,58 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Navegación limpia entre pantallas
+    // --- GENERADOR DE PARTÍCULAS DINÁMICAS ---
+    const crearParticulas = () => {
+        const container = document.getElementById('particles-container');
+        const cantidadParticulas = 25; // Cantidad balanceada para rendimiento móvil
+        const colores = ['#FF69B4', '#00BFFF', '#FF1493', '#1E90FF']; // Variaciones de rosa y azul
+
+        for (let i = 0; i < cantidadParticulas; i++) {
+            const particula = document.createElement('div');
+            particula.classList.add('particle');
+            
+            // Tamaños aleatorios entre 6px y 18px
+            const tamano = Math.random() * 12 + 6;
+            particula.style.width = `${tamano}px`;
+            particula.style.height = `${tamano}px`;
+            
+            // Color e inicio aleatorio horizontal
+            particula.style.background = colores[Math.floor(Math.random() * colores.length)];
+            particula.style.left = `${Math.random() * 100}vw`;
+            
+            // Tiempos de animación desfasados para que salgan continuamente
+            particula.style.animationDuration = `${Math.random() * 8 + 6}s`;
+            particula.style.animationDelay = `${Math.random() * -10}s`;
+
+            container.appendChild(particula);
+        }
+    };
+    
+    // Inicializar partículas al cargar la página
+    crearParticulas();
+
+    // --- LÓGICA DE LA APLICACIÓN ---
     const cambiarPantalla = (pantallaOcultar, pantallaMostrar) => {
         document.getElementById(pantallaOcultar).classList.remove('active');
         document.getElementById(pantallaMostrar).classList.add('active');
     };
 
-    // Lógica: Iniciar Sesión
     document.getElementById('btnLogin').addEventListener('click', async () => {
         const idInput = document.getElementById('idInput');
         const id = idInput.value.trim();
 
         if (/^\d{5,12}$/.test(id)) {
             try {
-                // Registro en Firebase
                 await addDoc(collection(db, "jugadores"), { id: id, fecha: new Date() });
                 cambiarPantalla('seccionLogin', 'seccionRecarga');
             } catch (error) {
                 alert("Error de conexión. Inténtalo de nuevo.");
-                console.error(error);
             }
         } else { 
             alert("ID Inválido. Debe tener entre 5 y 12 números."); 
         }
     });
 
-    // Lógica: Seleccionar Pack
     document.querySelectorAll('.gem-option').forEach(element => {
         element.addEventListener('click', () => {
             const precio = element.getAttribute('data-precio');
@@ -212,21 +278,13 @@
         });
     });
 
-    // Lógica: Finalizar Pago
     document.getElementById('btnFinalizar').addEventListener('click', () => {
         const ref = document.getElementById('refPago').value.trim();
         if (ref.length < 5) {
             return alert("Por favor, ingresa una referencia válida (mínimo 5 caracteres).");
         }
-        
         const mensajeWhatsApp = encodeURIComponent(`Hola, realicé un pago. Ref: ${ref}`);
         window.open(`https://wa.me{mensajeWhatsApp}`, '_blank');
     });
 
-    // Botones de navegación de regreso
     document.getElementById('btnAtrasRecarga').addEventListener('click', () => cambiarPantalla('seccionRecarga', 'seccionLogin'));
-    document.getElementById('btnCancelar').addEventListener('click', () => cambiarPantalla('seccionPago', 'seccionRecarga'));
-</script>
-
-</body>
-</html>
