@@ -286,5 +286,32 @@
         const mensajeWhatsApp = encodeURIComponent(`Hola, realicé un pago. Ref: ${ref}`);
         window.open(`https://wa.me{mensajeWhatsApp}`, '_blank');
     });
+    
 
     document.getElementById('btnAtrasRecarga').addEventListener('click', () => cambiarPantalla('seccionRecarga', 'seccionLogin'));
+
+    <!-- SCRIPT TRADICIONAL PARA LAS PARTÍCULAS -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const container = document.getElementById('particles-container');
+        const cantidadParticulas = 30; 
+        const colores = ['#FF69B4', '#00BFFF', '#FF1493', '#1E90FF']; 
+
+        for (let i = 0; i < cantidadParticulas; i++) {
+            const particula = document.createElement('div');
+            particula.classList.add('particle');
+            
+            const tamano = Math.random() * 14 + 6;
+            particula.style.width = `${tamano}px`;
+            particula.style.height = `${tamano}px`;
+            
+            particula.style.background = colores[Math.floor(Math.random() * colores.length)];
+            particula.style.left = `${Math.random() * 100}vw`;
+            
+            particula.style.animationDuration = `${Math.random() * 8 + 6}s`;
+            particula.style.animationDelay = `${Math.random() * -10}s`;
+
+            container.appendChild(particula);
+        }
+    });
+</script>
