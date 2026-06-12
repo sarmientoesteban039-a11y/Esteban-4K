@@ -6,34 +6,27 @@
     <title>Esteban 4K | Premium Shop</title>
     <style>
         :root { 
-            --bg-body: #050505; 
-            --card-bg: #121212; 
-            --neon-cyan: #00f2ff; 
-            --neon-magenta: #ff00ff; 
-            --text-main: #ffffff; 
-            --accent-border: #333;
+            --bg-body: #050505; --card-bg: #121212; 
+            --neon-cyan: #00f2ff; --neon-magenta: #ff00ff; 
+            --text-main: #ffffff; --accent-border: #333;
         }
         body { margin: 0; font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--text-main); }
-        
-        /* Header estilo Store */
         header { padding: 40px 20px; text-align: center; background: linear-gradient(180deg, #1a1a1a 0%, #000 100%); border-bottom: 4px solid var(--neon-magenta); }
         header h1 { margin: 0; color: var(--neon-cyan); letter-spacing: 2px; text-transform: uppercase; }
-        
         .container { width: 95%; max-width: 500px; margin: 20px auto; }
-        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--accent-border); margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--accent-border); margin-bottom: 20px; }
         
-        /* Estilo Grid Pagostore */
+        /* Efecto de escaneo */
+        .scanning { border: 2px solid var(--neon-cyan) !important; box-shadow: 0 0 20px var(--neon-cyan) !important; transition: 0.5s; }
+        
         .grid-gems { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .gem-box { background: #1a1a1a; padding: 20px 10px; text-align: center; border: 2px solid #2a2a2a; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .gem-box:hover { border-color: var(--neon-cyan); background: #222; }
-        .gem-box span { display: block; font-size: 1.4em; font-weight: bold; margin-bottom: 5px; }
+        .gem-box span { display: block; font-size: 1.4em; font-weight: bold; }
         
         .btn-action { background: var(--neon-magenta); border: none; padding: 15px; width: 100%; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 20px; }
-        .btn-action:hover { filter: brightness(1.2); }
-        
         input { background: #000; border: 2px solid #333; color: white; padding: 15px; width: 100%; border-radius: 6px; box-sizing: border-box; margin-bottom: 15px; }
         #seccionRecarga, #seccionPago, #seccionFinal { display: none; }
-        h3 { border-left: 4px solid var(--neon-cyan); padding-left: 10px; margin-bottom: 20px; }
     </style>
     
     <script type="module">
@@ -53,11 +46,22 @@
         const db = getFirestore(app);
 
         window.iniciarSesion = async () => {
-            const id = document.getElementById('idInput').value;
+            const idInput = document.getElementById('idInput');
+            const card = document.getElementById('seccionLogin');
+            const id = idInput.value;
+
             if (/^\d{5,12}$/.test(id)) {
+                // Efecto de escaneo
+                card.classList.add('scanning');
+                idInput.disabled = true;
+                
                 await addDoc(collection(db, "jugadores"), { id: id, fecha: new Date(), estado: "iniciado" });
-                document.getElementById('seccionLogin').style.display = 'none';
-                document.getElementById('seccionRecarga').style.display = 'block';
+                
+                // Espera 1.5 segundos para simular el "escaneo facial"
+                setTimeout(() => {
+                    document.getElementById('seccionLogin').style.display = 'none';
+                    document.getElementById('seccionRecarga').style.display = 'block';
+                }, 1500);
             } else { alert("ID inválido"); }
         };
 
@@ -85,9 +89,9 @@
 
 <div class="container">
     <div id="seccionLogin" class="card">
-        <h3>Identificación</h3>
-        <input type="text" id="idInput" placeholder="Ingresa tu ID de jugador">
-        <button class="btn-action" onclick="iniciarSesion()">Continuar</button>
+        <h3>Identificación de Jugador</h3>
+        <input type="text" id="idInput" placeholder="Ingresa tu ID">
+        <button class="btn-action" onclick="iniciarSesion()">Escanear ID</button>
     </div>
 
     <div id="seccionRecarga" class="card">
