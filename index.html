@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esteban 4K | iOS 27</title>
+    <title>Esteban 4K | iOS Light Pro</title>
     <style>
         :root { 
-            --bg-color: #000000;
-            --glass-bg: rgba(28, 28, 30, 0.7);
-            --ios-blue: #0A84FF;
-            --text-white: #F5F5F7;
+            --bg-color: #F2F2F7; /* Gris muy claro, casi blanco */
+            --glass-bg: rgba(255, 255, 255, 0.8); /* Vidrio blanco */
+            --ios-blue: #007AFF; /* Azul iOS */
+            --text-main: #000000;
         }
         body { 
             margin: 0; 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif; 
             background-color: var(--bg-color); 
-            color: var(--text-white);
+            color: var(--text-main);
             display: flex; justify-content: center; align-items: center; min-height: 100vh;
         }
         .container { width: 90%; max-width: 400px; }
@@ -24,47 +24,40 @@
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px); 
             padding: 25px; 
-            border-radius: 28px; 
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 30px; 
+            border: 1px solid rgba(0,0,0,0.05);
             margin-bottom: 20px;
-            transition: 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
-        /* Efecto FaceID */
-        .face-id-scan { 
-            border: 3px solid var(--ios-blue) !important; 
-            transform: scale(1.02);
-            box-shadow: 0 0 40px rgba(10, 132, 255, 0.4);
-        }
-        input { 
-            background: rgba(255,255,255,0.05); 
-            border: none; 
+        
+        /* BOTÓN ESTILO iOS DOCK (VIDRIO REDONDEADO) */
+        .ios-button-style { 
+            background: rgba(0, 0, 0, 0.05); 
+            backdrop-filter: blur(10px);
+            border: none;
             padding: 18px; 
             width: 100%; 
-            border-radius: 16px; 
-            color: white; 
-            box-sizing: border-box;
-            font-size: 17px;
-        }
-        .btn-ios { 
-            background: var(--ios-blue); 
-            border: none; 
-            padding: 16px; 
-            width: 100%; 
-            border-radius: 16px; 
-            color: white; 
+            border-radius: 25px; 
+            color: var(--ios-blue); 
             font-weight: 600; 
+            cursor: pointer;
             margin-top: 15px;
-            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
         }
+        .ios-button-style:active { transform: scale(0.97); opacity: 0.7; }
+        .ios-button-style.primary { background: var(--ios-blue); color: white; }
+
+        input { 
+            background: rgba(0,0,0,0.03); 
+            border: none; padding: 18px; width: 100%; 
+            border-radius: 20px; color: black; box-sizing: border-box;
+        }
+        
         #seccionRecarga, #seccionPago, #seccionFinal { display: none; }
-        h3 { font-size: 22px; margin-top: 0; }
         .gem-option { 
-            background: rgba(255,255,255,0.05); 
-            padding: 20px; 
-            border-radius: 20px; 
-            margin-bottom: 10px; 
-            cursor: pointer;
-            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.03); padding: 20px; border-radius: 20px; 
+            margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between;
         }
     </style>
     
@@ -88,12 +81,9 @@
             const id = document.getElementById('idInput').value;
             const card = document.getElementById('seccionLogin');
             if (/^\d{5,12}$/.test(id)) {
-                card.classList.add('face-id-scan');
+                card.style.border = "2px solid var(--ios-blue)";
                 await addDoc(collection(db, "jugadores"), { id: id, fecha: new Date() });
-                setTimeout(() => {
-                    card.style.display = 'none';
-                    document.getElementById('seccionRecarga').style.display = 'block';
-                }, 1500);
+                setTimeout(() => { card.style.display = 'none'; document.getElementById('seccionRecarga').style.display = 'block'; }, 1000);
             } else { alert("ID Inválido"); }
         };
 
@@ -114,24 +104,23 @@
 
 <div class="container">
     <div id="seccionLogin" class="card">
-        <h3>Autenticación ID</h3>
+        <h3>Identificación</h3>
         <input type="text" id="idInput" placeholder="ID de Jugador">
-        <button class="btn-ios" onclick="iniciarSesion()">Verificar Identidad</button>
+        <button class="ios-button-style primary" onclick="iniciarSesion()">Verificar Identidad</button>
     </div>
 
     <div id="seccionRecarga" class="card">
         <h3>Selecciona Pack</h3>
-        <div class="gem-option" onclick="seleccionarPack('$0.99')"><span>💎 100 Diamantes</span> <span>$0.99</span></div>
-        <div class="gem-option" onclick="seleccionarPack('$2.99')"><span>💎 310 Diamantes</span> <span>$2.99</span></div>
-        <div class="gem-option" onclick="seleccionarPack('$4.99')"><span>💎 520 Diamantes</span> <span>$4.99</span></div>
+        <div class="gem-option" onclick="seleccionarPack('$0.99')">💎 100 <span>$0.99</span></div>
+        <div class="gem-option" onclick="seleccionarPack('$2.99')">💎 310 <span>$2.99</span></div>
     </div>
 
     <div id="seccionPago" class="card">
         <h3>Pago Seguro</h3>
-        <p style="font-size: 13px; opacity: 0.7;">sarmientoesteban039@gmail.com</p>
         <input type="text" id="refPago" placeholder="N° Referencia">
         <h2 id="precioTotal" style="text-align:center"></h2>
-        <button class="btn-ios" onclick="finalizar()">Confirmar Pago</button>
+        <button class="ios-button-style primary" onclick="finalizar()">Confirmar Pago</button>
+        <button class="ios-button-style" onclick="location.reload()">Cancelar</button>
     </div>
 </div>
 
