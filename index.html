@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Recargas de diamantes para Free Fire al mejor precio. Esteban 4K es tu tienda premium de confianza.">
-    <meta name="keywords" content="recargas diamantes, Free Fire, tienda diamantes, Esteban 4K, recargas seguras">
     <title>Esteban 4K | Premium Shop</title>
     
     <style>
@@ -56,7 +55,14 @@
         window.finalizar = () => {
             const id = document.getElementById('idInput').value;
             const paquete = document.getElementById('precioTotal').innerText;
-            const mensaje = `Hola Esteban, acabo de realizar un pago.%0A- ID: ${id}%0A- Pack: ${paquete}%0A- Adjunto comprobante:`;
+            const refPago = document.getElementById('refPago').value;
+            
+            if (refPago.length < 5) {
+                alert("Por favor, ingresa el número de referencia del pago.");
+                return;
+            }
+
+            const mensaje = `Hola Esteban, acabo de realizar un pago.%0A- ID: ${id}%0A- Pack: ${paquete}%0A- Ref. Pago: ${refPago}`;
             window.open(`https://wa.me/584126701585?text=${mensaje}`, '_blank');
             document.getElementById('seccionPago').style.display = 'none';
             document.getElementById('seccionFinal').style.display = 'block';
@@ -96,11 +102,11 @@
         <button class="btn-back" onclick="volver('pago')">← Volver</button>
         <h3>3. Método de Pago</h3>
         <div style="text-align: center; margin: 15px 0;">
-            <p>Envía tu pago a esta cuenta de PayPal:</p>
+            <p>Envía tu pago a:</p>
             <div style="background: #000; padding: 10px; border: 1px solid var(--neon-magenta); border-radius: 8px; margin: 10px 0;">
                 <code style="color: var(--neon-cyan);">sarmientoesteban039@gmail.com</code>
             </div>
-            <p style="font-size: 0.8em; opacity: 0.7;">* Después de pagar, confirma con el botón abajo.</p>
+            <input type="text" id="refPago" placeholder="Ingresa el N° de referencia de PayPal">
         </div>
         <h2 id="precioTotal" style="color: var(--neon-cyan); text-align: center;"></h2>
         <button class="btn-action" onclick="finalizar()">Confirmar y Avisar por WhatsApp</button>
@@ -108,11 +114,10 @@
 
     <div id="seccionFinal" class="card" style="text-align: center;">
         <h2 style="color: var(--neon-cyan);">¡Compra Exitosa!</h2>
-        <p>Tu recarga está siendo procesada.</p>
-        <button class="btn-action" onclick="location.reload()">Regresar al inicio</button>
+        <p>Tu recarga está en proceso. Gracias por tu pago.</p>
+        <button class="btn-action" onclick="location.reload()">Realizar otra compra</button>
     </div>
 </div>
 
 </body>
 </html>
-
