@@ -10,6 +10,7 @@
             --ios-blue: #007AFF;
             --ios-red: #FF3B30;
             --ios-orange: #FF9500;
+            --ios-green: #4CD964;
             --text-main: #000000;
             --text-secondary: #636366;
         }
@@ -22,7 +23,7 @@
         body { 
             margin: 0; 
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif; 
-            background-color: #F2F2F7; /* Gris claro de fondo base de Apple */
+            background-color: #F2F2F7;
             color: var(--text-main);
             display: flex; 
             justify-content: center; 
@@ -41,8 +42,8 @@
             background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3SUD9dVw0iDXRZVOUQhhFckM29RzOD7AEUw&s'); 
             background-size: cover;
             background-position: center;
-            opacity: 0.25; /* Al 4% de opacidad para que se lea todo perfecto */
-            filter: blur(3px); /* Suaviza el fondo gaming */
+            opacity: 0.25; 
+            filter: blur(3px);
             z-index: -1;
             pointer-events: none;
         }
@@ -143,11 +144,36 @@
             text-align: center; width: 100%; margin-bottom: 15px; letter-spacing: 0.5px;
         }
 
-        /* Bloque de datos de pago dinámico */
         .datos-pago-box {
             background: rgba(255, 255, 255, 0.9); border-radius: 16px; padding: 14px;
             font-size: 14px; color: var(--text-secondary); line-height: 1.5;
             border: 1px solid rgba(0, 0, 0, 0.05); margin-bottom: 15px; text-align: left;
+            position: relative; overflow: hidden;
+        }
+
+        .logo-metodo {
+            float: right; width: 70px; height: auto; max-height: 40px;
+            object-fit: contain; margin-left: 10px; margin-bottom: 5px;
+        }
+
+        /* ⭐ ESTILOS PARA EL MÓDULO DE VALORACIÓN ⭐ */
+        .stars-wrapper {
+            display: flex; justify-content: center; gap: 12px; margin: 25px 0; direction: rtl;
+        }
+        .stars-wrapper input { display: none; }
+        .stars-wrapper label {
+            font-size: 40px; color: #D1D1D6; cursor: pointer; transition: color 0.2s, transform 0.1s;
+        }
+        .stars-wrapper label:hover,
+        .stars-wrapper label:hover ~ label,
+        .stars-wrapper input:checked ~ label {
+            color: #FFCC00; transform: scale(1.15);
+        }
+        .stars-wrapper label:active { transform: scale(0.9); }
+
+        #mensajeAgradecimiento {
+            display: none; text-align: center; margin-top: 15px;
+            animation: iosSlide 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         @keyframes iosSlide {
@@ -155,8 +181,9 @@
             to { transform: translateY(0); opacity: 1; }
         }
     </style>
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 
 <body>
@@ -164,12 +191,14 @@
 <div id="particles-container"></div>
 
 <div class="container">
+    <!-- PANTALLA 1: IDENTIFICACIÓN -->
     <div id="seccionLogin" class="card active">
         <h3>ID Jugador</h3>
         <input type="text" id="idInput" placeholder="ID de Jugador" inputmode="numeric">
         <button class="ios-button-style" id="btnLogin">Verificar UID</button>
     </div>
 
+    <!-- PANTALLA 2: SELECCIÓN DE PACK -->
     <div id="seccionRecarga" class="card">
         <h3>Selecciona Pack</h3>
         <div class="gem-option" data-precio="$0.99">💎 100 <span>$0.99</span></div>
@@ -179,6 +208,7 @@
         <button class="ios-button-style danger" id="btnAtrasRecarga">Atrás</button>
     </div>
 
+    <!-- PANTALLA 3: MÉTODOS DE PAGO -->
     <div id="seccionMetodoPago" class="card">
         <h3>Método de Pago</h3>
         <p style="color: var(--text-secondary); margin-bottom: 20px;">Elige cómo deseas realizar tu pago:</p>
@@ -194,6 +224,7 @@
         <button class="ios-button-style danger" id="btnAtrasMetodo">Atrás</button>
     </div>
 
+    <!-- PANTALLA 4: REGISTRO DE REFERENCIA -->
     <div id="seccionPago" class="card">
         <h3>Pago Seguro</h3>
         
@@ -214,6 +245,7 @@
         <button class="ios-button-style danger" id="btnCancelarPago">Cancelar</button>
     </div>
 
+    <!-- PANTALLA 5: TICKET DIGITAL -->
     <div id="seccionTicket" class="card">
         <h3 style="text-align: center; margin-bottom: 5px;">Comprobante de Orden</h3>
         <p style="text-align: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">Guarda una captura de este recibo</p>
@@ -231,20 +263,43 @@
             </div>
         </div>
 
-        <button class="ios-button-style" id="btnEnviarWhatsApp">Notificar a Alex</button>
+        <button class="ios-button-style" id="btnEnviarWhatsApp">Notificar a Esteban 4K</button>
         <button class="ios-button-style danger" id="btnNuevaOrden">Hacer otra recarga</button>
+    </div>
+
+    <!-- PANTALLA 6: APARTADO DE CALIFICACIÓN POR ESTRELLAS -->
+    <div id="seccionCalificacion" class="card">
+        <h3 style="text-align: center; margin-bottom: 8px;">¿Qué tal tu experiencia?</h3>
+        <p style="text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 5px;">Tu opinión es muy importante para seguir mejorando el servicio.</p>
+        
+        <div class="stars-wrapper">
+            <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+        </div>
+
+        <!-- Mensaje Automatizado de Agradecimiento Oculto -->
+        <div id="mensajeAgradecimiento">
+            <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+            <h4 style="margin: 0 0 8px 0; color: var(--ios-green); font-size: 19px; font-weight: 700;">¡Muchas gracias por tu apoyo!</h4>
+            <p style="margin: 0; font-size: 14px; color: var(--text-secondary); line-height: 1.4;">Tu calificación ha sido enviada con éxito. ¡Gracias por preferir TiendaEsteban!</p>
+            
+            <button class="ios-button-style" style="margin-top: 25px; background: #000000;" id="btnFinalTodo">Volver al Inicio</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // Configuración manual de tu tasa cambiaria del día
     const tasaDolarHoy = 790; 
+    const tuNumeroWhatsApp = "584126701585"; 
 
     const firebaseConfig = {
         apiKey: "AIzaSyCWLQaTQXt6DFHHf1S_-shcNdIaLpwXeoo",
-        authDomain: "://firebaseapp.com",
-        projectId: "esteban",
-        storageBucket: "esteban-.firebasestorage.app",
+        authDomain: "tu-proyecto.firebaseapp.com",
+        projectId: "tu-proyecto-id",
+        storageBucket: "tu-proyecto.appspot.com",
         messagingSenderId: "319790003304",
         appId: "1:319790003304:web:b84b2458213686b3e0b7dd"
     };
@@ -257,7 +312,6 @@
         }
     } catch (e) { }
 
-    // Memorias globales del flujo
     let jugadorId = "";
     let jugadorNombre = "";
     let precioSeleccionado = "";
@@ -269,7 +323,7 @@
         document.getElementById(pantallaMostrar).classList.add('active');
     };
 
-    // Paso 1: Verificación de Identidad con Efecto IA (5 Segundos)
+    // Paso 1: Verificación de Identidad
     document.getElementById('btnLogin').addEventListener('click', function() {
         const idInput = document.getElementById('idInput');
         const btnLogin = document.getElementById('btnLogin');
@@ -281,7 +335,7 @@
         }
 
         cardLogin.classList.add('verificando');
-        btnLogin.innerText = "Alexx esta verificando tu UID...";
+        btnLogin.innerText = "Verificando tu UID...";
         btnLogin.disabled = true; idInput.disabled = true;
 
         if (db) { db.collection("jugadores").add({ id: jugadorId, fecha: new Date() }).catch(function() { }); }
@@ -297,13 +351,12 @@
     document.querySelectorAll('#seccionRecarga .gem-option').forEach(function(element) {
         element.addEventListener('click', function() {
             precioSeleccionado = element.getAttribute('data-precio');
-            // Deja el select limpio al entrar
             document.getElementById('selectMetodoPago').value = "";
             cambiarPantalla('seccionRecarga', 'seccionMetodoPago');
         });
     });
 
-    // Paso 3: Barra desplegable - Al hacer click en Continuar analiza y muestra los datos
+    // Paso 3: Barra desplegable
     document.getElementById('btnContinuarMetodo').addEventListener('click', function() {
         const select = document.getElementById('selectMetodoPago');
         metodoSeleccionado = select.value;
@@ -317,10 +370,10 @@
         
         const contenedorDatos = document.getElementById('contenedorDatosCuentas');
 
-        // Renderizado e inyección de datos según la selección de la barra desplegable
         if (metodoSeleccionado === "Pago Móvil") {
             document.getElementById('precioTotal').innerText = "Total: " + totalEnBolivares + " Bs.";
             contenedorDatos.innerHTML = `
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Banesco_logo.svg" class="logo-metodo" alt="Banesco">
                 <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">📋 Datos de Pago Móvil:</b>
                 • Banco: Banesco (0134)<br>
                 • Teléfono: 0412-6701585<br>
@@ -330,6 +383,7 @@
         } else if (metodoSeleccionado === "Binance Pay") {
             document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado;
             contenedorDatos.innerHTML = `
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/Binance_Logo.svg" class="logo-metodo" alt="Binance">
                 <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">🔶 Datos de Binance Pay:</b>
                 • Binance ID: 319790003<br>
                 • <b>Monto exacto: ${precioSeleccionado}</b>
@@ -337,6 +391,7 @@
         } else if (metodoSeleccionado === "PayPal") {
             document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado;
             contenedorDatos.innerHTML = `
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="logo-metodo" alt="PayPal">
                 <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">💳 Datos de PayPal:</b>
                 • Correo: esteban4k@email.com<br>
                 • <b>Monto exacto: ${precioSeleccionado}</b>
@@ -346,9 +401,10 @@
         cambiarPantalla('seccionMetodoPago', 'seccionPago');
     });
 
-    // Paso 4: Confirmar pago e inyectar al recibo
+    // Paso 4: Confirmar pago (Fluido con límite de tiempo)
     document.getElementById('btnFinalizar').addEventListener('click', function() {
         referenciaIngresada = document.getElementById('refPago').value.trim();
+        const btnFinalizar = document.getElementById('btnFinalizar');
         
         if (referenciaIngresada.length < 5) { 
             return alert("Por favor, ingresa una referencia válida (mínimo 5 caracteres)."); 
@@ -359,41 +415,77 @@
             return alert("Por favor, selecciona o toma una foto del comprobante para continuar.");
         }
 
-        const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
-        const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
-        const montoFinalTexto = (metodoSeleccionado === "Pago Móvil") ? totalEnBolivares + " Bs." : precioSeleccionado;
+        btnFinalizar.disabled = true;
+        btnFinalizar.innerText = "Procesando orden...";
 
-        // Algoritmo: Genera un Nick único a partir de los números reales de su ID
-        const listaNombres = ["Slayer", "Alfa", "Ghost", "Ninja", "Titan", "Raptor", "Zeus", "Shadow", "Gamer"];
-        const ultimos4 = jugadorId.slice(-4); 
-        const indice = parseInt(jugadorId) % listaNombres.length;
-        jugadorNombre = listaNombres[indice] + "_" + ultimos4;
+        let validacionTerminada = false;
+
+        const procesarRegistroTicket = () => {
+            if (validacionTerminada) return;
+            validacionTerminada = true;
+
+            const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
+            const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
+            const montoFinalTexto = (metodoSeleccionado === "Pago Móvil") ? totalEnBolivares + " Bs." : precioSeleccionado;
+
+            const listaNombres = ["Slayer", "Alfa", "Ghost", "Ninja", "Titan", "Raptor", "Zeus", "Shadow", "Gamer"];
+            const ultimos4 = jugadorId.slice(-4); 
+            const indice = parseInt(jugadorId) % listaNombres.length;
+            jugadorNombre = listaNombres[indice] + "_" + ultimos4;
+
+            if (db) {
+                db.collection("pagos_recargas").add({
+                    jugadorId: jugadorId,
+                    jugadorNombre: jugadorNombre,
+                    pack: precioSeleccionado,
+                    metodo: metodoSeleccionado,
+                    monto: montoFinalTexto,
+                    referencia: referenciaIngresada,
+                    estatus: "Pendiente",
+                    fecha: new Date()
+                }).catch(() => {});
+            }
+
+            document.getElementById('t-nombre').innerText = "⚔️ " + jugadorNombre;
+            document.getElementById('t-id').innerText = jugadorId;
+            document.getElementById('t-pack').innerText = (precioSeleccionado === "$0.99") ? "💎 100 Diamantes" : "💎 310 Diamantes";
+            document.getElementById('t-metodo').innerText = metodoSeleccionado;
+            document.getElementById('t-monto').innerText = montoFinalTexto;
+            document.getElementById('t-ref').innerText = referenciaIngresada;
+
+            btnFinalizar.disabled = false;
+            btnFinalizar.innerText = "Confirmar Pago";
+            cambiarPantalla('seccionPago', 'seccionTicket');
+        };
+
+        const temporizadorFondeo = setTimeout(() => {
+            procesarRegistroTicket();
+        }, 1500);
 
         if (db) {
-            db.collection("pagos_recargas").add({
-                jugadorId: jugadorId,
-                jugadorNombre: jugadorNombre,
-                pack: precioSeleccionado,
-                metodo: metodoSeleccionado,
-                monto: montoFinalTexto,
-                referencia: referenciaIngresada,
-                estatus: "Pendiente",
-                fecha: new Date()
-            }).catch(function() { });
+            db.collection("pagos_recargas").where("referencia", "==", referenciaIngresada).get()
+                .then((querySnapshot) => {
+                    clearTimeout(temporizadorFondeo);
+                    if (!querySnapshot.empty) {
+                        alert("⚠️ ERROR: Esta referencia ya fue utilizada en una recarga anterior. Ingresa los datos de tu pago actual.");
+                        btnFinalizar.disabled = false;
+                        btnFinalizar.innerText = "Confirmar Pago";
+                        validacionTerminada = true;
+                    } else {
+                        procesarRegistroTicket();
+                    }
+                })
+                .catch(() => {
+                    clearTimeout(temporizadorFondeo);
+                    procesarRegistroTicket();
+                });
+        } else {
+            clearTimeout(temporizadorFondeo);
+            procesarRegistroTicket();
         }
-
-        // Inyectar datos en las etiquetas del ticket
-        document.getElementById('t-nombre').innerText = "⚔️ " + jugadorNombre;
-        document.getElementById('t-id').innerText = jugadorId;
-        document.getElementById('t-pack').innerText = (precioSeleccionado === "$0.99") ? "💎 100 Diamantes" : "💎 310 Diamantes";
-        document.getElementById('t-metodo').innerText = metodoSeleccionado;
-        document.getElementById('t-monto').innerText = montoFinalTexto;
-        document.getElementById('t-ref').innerText = referenciaIngresada;
-
-        cambiarPantalla('seccionPago', 'seccionTicket');
     });
 
-    // Enviar datos formateados directo a tu WhatsApp
+    // Paso 5: Enviar a WhatsApp y pasar AUTOMÁTICAMENTE a la Calificación
     document.getElementById('btnEnviarWhatsApp').addEventListener('click', function() {
         const montoFinalTexto = document.getElementById('t-monto').innerText;
         const packNombre = document.getElementById('t-pack').innerText;
@@ -408,11 +500,36 @@
             "🔢 Ref: " + referenciaIngresada + "\n\n" +
             "Estatus: 🟡 Esperando validación por Esteban 4K."
         );
-        window.open("https://wa.me" + mensajeWhatsApp, '_blank');
+        
+        window.open("https://wa.me/" + tuNumeroWhatsApp + "?text=" + mensajeWhatsApp, '_blank');
+        
+        setTimeout(function() {
+            cambiarPantalla('seccionTicket', 'seccionCalificacion');
+        }, 400);
     });
 
-    document.getElementById('btnNuevaOrden').addEventListener('click', function() { location.reload(); });
+    // ⭐ ENVÍO AUTOMÁTICO DE ESTRELLAS Y AGRADECIMIENTO ⭐
+    document.querySelectorAll('.stars-wrapper input').forEach(function(starInput) {
+        starInput.addEventListener('change', function() {
+            const puntuacion = this.value;
+            
+            if (db) {
+                db.collection("valoraciones").add({
+                    jugadorId: jugadorId,
+                    jugadorNombre: jugadorNombre,
+                    estrellas: puntuacion,
+                    fecha: new Date()
+                }).catch(() => {});
+            }
 
+            document.querySelector('.stars-wrapper').style.display = 'none';
+            document.getElementById('mensajeAgradecimiento').style.display = 'block';
+        });
+    });
+
+    // Botones de reinicio y navegación
+    document.getElementById('btnFinalTodo').addEventListener('click', function() { location.reload(); });
+    document.getElementById('btnNuevaOrden').addEventListener('click', function() { location.reload(); });
     document.getElementById('btnAtrasRecarga').addEventListener('click', function() { cambiarPantalla('seccionRecarga', 'seccionLogin'); });
     document.getElementById('btnAtrasMetodo').addEventListener('click', function() { cambiarPantalla('seccionMetodoPago', 'seccionRecarga'); });
     document.getElementById('btnCancelarPago').addEventListener('click', function() { cambiarPantalla('seccionPago', 'seccionMetodoPago'); });
