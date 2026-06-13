@@ -109,12 +109,13 @@
         .ios-button-style.danger { background: rgba(0, 0, 0, 0.05); color: var(--ios-red); }
         .ios-button-style:disabled { background: #D1D1D6; color: #8E8E93; cursor: not-allowed; }
 
-        input { 
+        input, select { 
             background: rgba(0,0,0,0.04); border: 2px solid transparent; padding: 16px; width: 100%; 
             border-radius: 16px; color: var(--text-main); font-size: 16px; margin-bottom: 8px; outline: none;
+            font-family: inherit;
         }
-        input:focus { border-color: var(--ios-blue); background: #ffffff; }
-        input:disabled { background: rgba(0,0,0,0.02); color: #8E8E93; }
+        input:focus, select:focus { border-color: var(--ios-blue); background: #ffffff; }
+        input:disabled, select:disabled { background: rgba(0,0,0,0.02); color: #8E8E93; }
 
         .gem-option { 
             background: rgba(0,0,0,0.04); padding: 18px; border-radius: 16px; margin-bottom: 12px; 
@@ -142,6 +143,13 @@
             text-align: center; width: 100%; margin-bottom: 15px; letter-spacing: 0.5px;
         }
 
+        /* Bloque de datos de pago dinámico */
+        .datos-pago-box {
+            background: rgba(255, 255, 255, 0.9); border-radius: 16px; padding: 14px;
+            font-size: 14px; color: var(--text-secondary); line-height: 1.5;
+            border: 1px solid rgba(0, 0, 0, 0.05); margin-bottom: 15px; text-align: left;
+        }
+
         @keyframes iosSlide {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -156,14 +164,12 @@
 <div id="particles-container"></div>
 
 <div class="container">
-    <!-- PANTALLA 1: IDENTIFICACIÓN -->
     <div id="seccionLogin" class="card active">
         <h3>ID Jugador</h3>
         <input type="text" id="idInput" placeholder="ID de Jugador" inputmode="numeric">
         <button class="ios-button-style" id="btnLogin">Verificar UID</button>
     </div>
 
-    <!-- PANTALLA 2: SELECCIÓN DE PACK -->
     <div id="seccionRecarga" class="card">
         <h3>Selecciona Pack</h3>
         <div class="gem-option" data-precio="$0.99">💎 100 <span>$0.99</span></div>
@@ -173,54 +179,41 @@
         <button class="ios-button-style danger" id="btnAtrasRecarga">Atrás</button>
     </div>
 
-    <!-- PANTALLA 3: MÉTODOS DE PAGO -->
     <div id="seccionMetodoPago" class="card">
         <h3>Método de Pago</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 15px;">Selecciona una opción y realiza el pago:</p>
+        <p style="color: var(--text-secondary); margin-bottom: 20px;">Elige cómo deseas realizar tu pago:</p>
         
-        <div class="gem-option" data-metodo="Pago Móvil" style="flex-direction: column; align-items: flex-start; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
-                <span>📱 Pago Móvil</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
-            </div>
-            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; line-height: 1.4; width: 100%;">
-                Banco: Banesco (0134)<br>
-                Teléfono: 0412-6701585<br>
-                Cédula: V-12.345.678<br>
-                <b id="montoPagoMovil" style="color: var(--ios-blue); display: block; margin-top: 5px;">Monto: Calculando...</b>
-            </div>
-        </div>
+        <select id="selectMetodoPago">
+            <option value="" disabled selected>🔽 Selecciona un método...</option>
+            <option value="Pago Móvil">📱 Pago Móvil</option>
+            <option value="Binance Pay">🔶 Binance Pay</option>
+            <option value="PayPal">💳 PayPal</option>
+        </select>
         
-        <div class="gem-option" data-metodo="Binance Pay" style="flex-direction: column; align-items: flex-start; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
-                <span>🔶 Binance Pay</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
-            </div>
-            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; width: 100%;">
-                Binance ID: 319790003
-            </div>
-        </div>
-        
-        <div class="gem-option" data-metodo="PayPal" style="flex-direction: column; align-items: flex-start; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; width: 100%; font-weight: 700;">
-                <span>💳 PayPal</span> <span style="color: var(--ios-blue); font-weight: 600;">Seleccionar</span>
-            </div>
-            <div style="font-size: 13px; color: var(--text-secondary); font-weight: 400; width: 100%;">
-                Correo: esteban4k@email.com
-            </div>
-        </div>
-        
+        <button class="ios-button-style" id="btnContinuarMetodo">Continuar</button>
         <button class="ios-button-style danger" id="btnAtrasMetodo">Atrás</button>
     </div>
 
-    <!-- PANTALLA 4: REGISTRO DE REFERENCIA -->
     <div id="seccionPago" class="card">
         <h3>Pago Seguro</h3>
+        
+        <div id="contenedorDatosCuentas" class="datos-pago-box"></div>
+
         <input type="text" id="refPago" placeholder="N° Referencia" inputmode="numeric">
+        
+        <div style="margin: 15px 0; text-align: center;">
+            <label for="comprobanteImagen" style="display: inline-block; background: rgba(0, 122, 255, 0.08); border: 1px dashed var(--ios-blue); padding: 14px 20px; border-radius: 16px; color: var(--ios-blue); cursor: pointer; font-weight: 600; width: 100%; box-sizing: border-box; font-size: 15px;">
+                📸 Adjuntar imagen del comprobante
+            </label>
+            <input type="file" id="comprobanteImagen" accept="image/*" style="display: none;" onchange="if(this.files.length > 0) { document.getElementById('nombreArchivo').innerText = '✅ ' + this.files[0].name; document.getElementById('nombreArchivo').style.color = '#4CD964'; } else { document.getElementById('nombreArchivo').innerText = 'Ningún archivo seleccionado'; document.getElementById('nombreArchivo').style.color = 'var(--text-secondary)'; }">
+            <div id="nombreArchivo" style="font-size: 13px; color: var(--text-secondary); margin-top: 6px; font-weight: 500;">Ningún archivo seleccionado</div>
+        </div>
+
         <h2 id="precioTotal" style="text-align:center; margin: 20px 0;"></h2>
         <button class="ios-button-style" id="btnFinalizar">Confirmar Pago</button>
         <button class="ios-button-style danger" id="btnCancelarPago">Cancelar</button>
     </div>
 
-    <!-- PANTALLA 5: TICKET DIGITAL DE COMPROBACIÓN -->
     <div id="seccionTicket" class="card">
         <h3 style="text-align: center; margin-bottom: 5px;">Comprobante de Orden</h3>
         <p style="text-align: center; font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">Guarda una captura de este recibo</p>
@@ -300,40 +293,70 @@
         }, 5000);
     });
 
-    // Paso 2: Selección de Pack + Conversor matemático
+    // Paso 2: Selección de Pack
     document.querySelectorAll('#seccionRecarga .gem-option').forEach(function(element) {
         element.addEventListener('click', function() {
             precioSeleccionado = element.getAttribute('data-precio');
-            const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
-            const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
-            
-            document.getElementById('montoPagoMovil').innerText = "Monto exacto a transferir: " + totalEnBolivares + " Bs.";
+            // Deja el select limpio al entrar
+            document.getElementById('selectMetodoPago').value = "";
             cambiarPantalla('seccionRecarga', 'seccionMetodoPago');
         });
     });
 
-    // Paso 3: Selección de método de pago y formato de totales
-    document.querySelectorAll('#seccionMetodoPago .gem-option').forEach(function(element) {
-        element.addEventListener('click', function() {
-            metodoSeleccionado = element.getAttribute('data-metodo');
-            const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
-            const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
-            
-            if (metodoSeleccionado === "Pago Móvil") {
-                document.getElementById('precioTotal').innerText = "Total: " + totalEnBolivares + " Bs. (" + metodoSeleccionado + ")";
-            } else {
-                document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado + " (" + metodoSeleccionado + ")";
-            }
-            cambiarPantalla('seccionMetodoPago', 'seccionPago');
-        });
+    // Paso 3: Barra desplegable - Al hacer click en Continuar analiza y muestra los datos
+    document.getElementById('btnContinuarMetodo').addEventListener('click', function() {
+        const select = document.getElementById('selectMetodoPago');
+        metodoSeleccionado = select.value;
+
+        if (!metodoSeleccionado) {
+            return alert("Por favor, selecciona un método de pago en la barra desplegable.");
+        }
+
+        const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
+        const totalEnBolivares = (precioNumerico * tasaDolarHoy).toFixed(2);
+        
+        const contenedorDatos = document.getElementById('contenedorDatosCuentas');
+
+        // Renderizado e inyección de datos según la selección de la barra desplegable
+        if (metodoSeleccionado === "Pago Móvil") {
+            document.getElementById('precioTotal').innerText = "Total: " + totalEnBolivares + " Bs.";
+            contenedorDatos.innerHTML = `
+                <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">📋 Datos de Pago Móvil:</b>
+                • Banco: Banesco (0134)<br>
+                • Teléfono: 0412-6701585<br>
+                • Cédula: V-12.345.678<br>
+                • <b>Monto exacto: ${totalEnBolivares} Bs.</b>
+            `;
+        } else if (metodoSeleccionado === "Binance Pay") {
+            document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado;
+            contenedorDatos.innerHTML = `
+                <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">🔶 Datos de Binance Pay:</b>
+                • Binance ID: 319790003<br>
+                • <b>Monto exacto: ${precioSeleccionado}</b>
+            `;
+        } else if (metodoSeleccionado === "PayPal") {
+            document.getElementById('precioTotal').innerText = "Total: " + precioSeleccionado;
+            contenedorDatos.innerHTML = `
+                <b style="color: var(--ios-blue); display: block; margin-bottom: 5px;">💳 Datos de PayPal:</b>
+                • Correo: esteban4k@email.com<br>
+                • <b>Monto exacto: ${precioSeleccionado}</b>
+            `;
+        }
+
+        cambiarPantalla('seccionMetodoPago', 'seccionPago');
     });
 
-    // Paso 4: Confirmar pago (Algoritmo IA genera el Nick e inyecta al comprobante)
+    // Paso 4: Confirmar pago e inyectar al recibo
     document.getElementById('btnFinalizar').addEventListener('click', function() {
         referenciaIngresada = document.getElementById('refPago').value.trim();
         
         if (referenciaIngresada.length < 5) { 
             return alert("Por favor, ingresa una referencia válida (mínimo 5 caracteres)."); 
+        }
+
+        const archivos = document.getElementById('comprobanteImagen').files;
+        if (archivos.length === 0) {
+            return alert("Por favor, selecciona o toma una foto del comprobante para continuar.");
         }
 
         const precioNumerico = parseFloat(precioSeleccionado.replace('$', ''));
